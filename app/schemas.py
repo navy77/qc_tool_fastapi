@@ -1,74 +1,60 @@
 from pydantic import BaseModel
 from typing import List, Optional
-
+from datetime import datetime
 
 class SpecificationBase(BaseModel):
-    project_name: str
-    divison_name: str 
-    process_name: str
-    
-class ProjectCreate(SpecificationBase):
+    model: str
+    spec: float 
+    spec_max: float
+    spec_min: float
+
+class SpecificationCreate(SpecificationBase):
     pass
 
-class Project(ProjectBase):
-    project_id: int
+class Specification(SpecificationBase):
+    spec_id: str
 
     class Config:
         from_attributes  = True
 
 
-class DataBase(BaseModel):
-    data_name: str
+class Measure_dataBase(BaseModel):
+    measure_time: datetime
+    model:str
+    lot_no = str
+    machine_no = str
+    instrument_no = str
+    value = float
+    spec_nom = float
+    spec_max = float
+    spec_min = float
+    judgment = str
+    employee = str
 
-class DataCreate(DataBase):
-    project_id: int
+class Measure_dataCreate(Measure_dataBase):
+    spec_id: str
 
-class Data(DataBase):
+class Measure_data(Measure_dataBase):
     id: int
-    project_id: int
+    spec_id: str
+
+    class Config:
+        from_attributes  = True
+
+class CalibrationBase(BaseModel):
+    instrument_no: str
+    instrument_name:str
+    exp_date:datetime
+    calibration_no:str
+
+class CalibrationCreate(CalibrationBase):
+    pass
+
+class Calibration(CalibrationBase):
+    pass
 
     class Config:
         from_attributes  = True
 
 
-class StatusBase(BaseModel):
-    status_name: str
-
-class StatusCreate(StatusBase):
-    project_id: int
-
-class Status(StatusBase):
-    id: int
-    project_id: int
-
-    class Config:
-        from_attributes  = True
-
-
-class AlarmBase(BaseModel):
-    alarm_name: str
-
-class AlarmCreate(AlarmBase):
-    project_id: int
-
-class Alarm(AlarmBase):
-    id: int
-    project_id: int
-
-    class Config:
-        from_attributes  = True
-
-
-class MachineBase(BaseModel):
-    machine_name: str
-
-class MachineCreate(MachineBase):
-    project_id: int
-
-class Machine(MachineBase):
-    id: int
-    project_id: int
-
-    class Config:
-        from_attributes  = True
 

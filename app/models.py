@@ -4,7 +4,7 @@ from .database import Base
 
 class Specification(Base):
     __tablename__ = "specification_db"
-    spec_id = Column(Integer, primary_key=True, index=True)
+    spec_id = Column(String, primary_key=True, index=True)
     model = Column(String)
     spec = Column(Float)
     spec_max = Column(Float)
