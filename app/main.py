@@ -1,18 +1,16 @@
 from fastapi import FastAPI
 from .database import engine
 from . import models
-from .routers import project, data, status, alarm ,machine
+from .routers import calibration, measure, specification
 from fastapi.middleware.cors import CORSMiddleware
 
 models.Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
 
-app.include_router(project.router, prefix="/projects", tags=["projects"])
-app.include_router(data.router, prefix="/data", tags=["data"])
-app.include_router(status.router, prefix="/status", tags=["status"])
-app.include_router(alarm.router, prefix="/alarms", tags=["alarms"])
-app.include_router(machine.router, prefix="/machines", tags=["machines"])
+app.include_router(specification.router, prefix="/specification", tags=["specification"])
+app.include_router(measure.router, prefix="/measure", tags=["measure"])
+app.include_router(calibration.router, prefix="/calibration", tags=["calibration"])
 
 origins = [
     "http://localhost:3000",  

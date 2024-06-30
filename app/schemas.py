@@ -3,6 +3,7 @@ from typing import List, Optional
 from datetime import datetime
 
 class SpecificationBase(BaseModel):
+    spec_id: str
     model: str
     spec: float 
     spec_max: float
@@ -15,46 +16,42 @@ class Specification(SpecificationBase):
     spec_id: str
 
     class Config:
-        from_attributes  = True
+        from_attributes = True
 
-
-class Measure_dataBase(BaseModel):
+class MeasureBase(BaseModel):
     measure_time: datetime
-    model:str
-    lot_no = str
-    machine_no = str
-    instrument_no = str
-    value = float
-    spec_nom = float
-    spec_max = float
-    spec_min = float
-    judgment = str
-    employee = str
+    model: str
+    lot_no: str
+    machine_no: str
+    instrument_no: str
+    value: float
+    spec: float
+    spec_max: float
+    spec_min: float
+    judgment: str
+    employee: str
+    
 
-class Measure_dataCreate(Measure_dataBase):
+class MeasureCreate(MeasureBase):
     spec_id: str
 
-class Measure_data(Measure_dataBase):
+class Measure(MeasureBase):
     id: int
     spec_id: str
 
     class Config:
-        from_attributes  = True
+        from_attributes = True
 
 class CalibrationBase(BaseModel):
-    instrument_no: str
-    instrument_name:str
-    exp_date:datetime
-    calibration_no:str
+    instrument_name: str
+    exp_date: datetime
+    calibration_no: str
 
 class CalibrationCreate(CalibrationBase):
-    pass
+    instrument_no: str
 
 class Calibration(CalibrationBase):
-    pass
+    instrument_no: Optional[str] = None
 
     class Config:
-        from_attributes  = True
-
-
-
+        from_attributes = True

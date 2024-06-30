@@ -1,171 +1,122 @@
 from sqlalchemy.orm import Session
 from . import schemas,models
-######  project  ########
 
-def create_project(db: Session, project: schemas.ProjectCreate):
-    db_project = models.Project(**project.dict())
-    db.add(db_project)
+######  Specification  ########
+
+def create_spec(db: Session, specification: schemas.SpecificationCreate):
+    db_specification = models.Specification(**specification.dict())
+    db.add(db_specification)
     db.commit()
-    db.refresh(db_project)
-    return db_project
+    db.refresh(db_specification)
+    return db_specification
 
-def get_project(db: Session, project_id: int):
-    return db.query(models.Project).filter(models.Project.project_id == project_id).first()
+def get_spec(db: Session, spec_id: str):
+    # return db.query(models.Specification).order_by(models.Specification.spec_id).all()
+    return db.query(models.Specification).filter(models.Specification.spec_id == spec_id).first()
 
-def get_all_project(db: Session, skip: int = 0, limit: int = 10):
-    return db.query(models.Project).offset(skip).limit(limit).all()
+def get_all_spec(db: Session, skip: int = 0, limit: int = 10):
+    # return db.query(models.Specification).offset(skip).limit(limit).all()
+    return db.query(models.Specification).order_by(models.Specification.spec_id).offset(skip).limit(limit).all()
 
-def update_project(db: Session, project_id: int, project: schemas.ProjectCreate):
-    db_project = db.query(models.Project).filter(models.Project.project_id == project_id).first()
-    if db_project:
-        db_project.project_name = project.project_name
-        db_project.process_name = project.process_name
+def update_spec(db: Session, spec_id: str, specification: schemas.SpecificationCreate):
+    db_specification = db.query(models.Specification).filter(models.Specification.spec_id == spec_id).first()
+    if db_specification:
+        db_specification.model = specification.model
+        db_specification.spec = specification.spec
+        db_specification.spec_max = specification.spec_max
+        db_specification.spec_min = specification.spec_min
+        
         db.commit()
-        db.refresh(db_project)
-        return db_project
+        db.refresh(db_specification)
+        return db_specification
     return None
 
-def delete_project(db: Session, project_id: int):
-    db_project = db.query(models.Project).filter(models.Project.project_id == project_id).first()
-    if db_project:
-        db.delete(db_project)
+def delete_spec(db: Session, spec_id: str):
+    db_specification = db.query(models.Specification).filter(models.Specification.spec_id == spec_id).first()
+
+    if db_specification:
+        db.delete(db_specification)
         db.commit()
-        return db_project
+        return db_specification
     return None
 
-######  data  ########
-def create_data(db: Session, data: schemas.DataCreate):
-    db_data = models.Data(**data.dict())
-    db.add(db_data)
+######  measure  ########
+def create_measure(db: Session, measure: schemas.MeasureCreate):
+    db_measure = models.Measure(**measure.dict())
+    db.add(db_measure)
     db.commit()
-    db.refresh(db_data)
-    return db_data
+    db.refresh(db_measure)
+    return db_measure
 
-def get_data(db: Session, data_id: int):
-    return db.query(models.Data).filter(models.Data.id == data_id).first()
+def get_all_measure(db: Session, skip: int = 0, limit: int = 10):
+    # return db.query(models.Measure).offset(skip).limit(limit).all()
+    return db.query(models.Measure).order_by(models.Measure.spec_id).offset(skip).limit(limit).all()
 
-def get_all_data(db: Session, skip: int = 0, limit: int = 10):
-    return db.query(models.Data).offset(skip).limit(limit).all()
+def get_measure_by_spec_id(db: Session, spec_id: int):
+    # return db.query(models.Measure).filter(models.Measure.spec_id == spec_id).all()
+    return db.query(models.Measure).filter(models.Measure.spec_id == spec_id).first()
 
-def get_data_by_project(db: Session, project_id: int):
-    return db.query(models.Data).filter(models.Data.project_id == project_id).all()
+def update_measure(db: Session, id: int, measure: schemas.MeasureCreate):
+    db_measure = db.query(models.Measure).filter(models.Measure.id == id).first()
+    if db_measure:
+        db_measure.model = measure.model
+        db_measure.lot_no = measure.lot_no
+        db_measure.machine_no = measure.machine_no
+        db_measure.instrument_no = measure.instrument_no
+        # db_measure.value = measure.value
+        db_measure.spec_max = measure.spec_max
+        db_measure.spec_min = measure.spec_min
+        db_measure.spec = measure.spec
+        db_measure.judgment = measure.judgment
+        db_measure.judgment = measure.employee
 
-
-def update_data(db: Session, data_id: int, data: schemas.DataCreate):
-    db_data = db.query(models.Data).filter(models.Data.id == data_id).first()
-    if db_data:
-        db_data.data_name = data.data_name
         db.commit()
-        db.refresh(db_data)
-        return db_data
+        db.refresh(db_measure)
+        return db_measure
     return None
 
-def delete_data(db: Session, data_id: int):
-    db_data = db.query(models.Data).filter(models.Data.id == data_id).first()
-    if db_data:
-        db.delete(db_data)
+def delete_measure(db: Session, id: int):
+    db_measure = db.query(models.Measure).filter(models.Measure.id == id).first()
+    if db_measure:
+        db.delete(db_measure)
         db.commit()
-        return db_data
+        return db_measure
     return None
 
-######  status  ########
-def create_status(db: Session, status: schemas.StatusCreate):
-    db_status = models.Status(**status.dict())
-    db.add(db_status)
+######  calibratation  ########
+
+def create_calibration(db: Session, calibration: schemas.CalibrationCreate):
+    db_calibration = models.Calibration(**calibration.dict())
+    db.add(db_calibration)
     db.commit()
-    db.refresh(db_status)
-    return db_status
+    db.refresh(db_calibration)
+    return db_calibration
 
-def get_status(db: Session, status_id: int):
-    return db.query(models.Status).filter(models.Status.id == status_id).first()
+def get_calibration(db: Session, instrument_no: str):
+    # return db.query(models.Calibration).filter(models.Calibration.instrument_no == instrument_no).first()
+    return db.query(models.Calibration).filter(models.Calibration.instrument_no == instrument_no).first()
 
-def get_status_by_project(db: Session, project_id: int):
-    return db.query(models.Status).filter(models.Status.project_id == project_id).all()
+def get_all_calibration(db: Session, skip: int = 0, limit: int = 10):
+    # return db.query(models.Calibration).offset(skip).limit(limit).all()
+    return db.query(models.Calibration).order_by(models.Calibration.instrument_no).offset(skip).limit(limit).all()
 
-def get_all_status(db: Session, skip: int = 0, limit: int = 10):
-    return db.query(models.Status).offset(skip).limit(limit).all()
+def update_calibration(db: Session, instrument_no: str, calibration: schemas.CalibrationCreate):
+    db_calibration = db.query(models.Calibration).filter(models.Calibration.instrument_no == instrument_no).first()
+    if db_calibration:
+        db_calibration.instrument_name = calibration.instrument_name
+        db_calibration.exp_date = calibration.exp_date
+        db_calibration.calibration_no = calibration.calibration_no
 
-def update_status(db: Session, status_id: int, status: schemas.StatusCreate):
-    db_status = db.query(models.Status).filter(models.Status.id == status_id).first()
-    if db_status:
-        db_status.status_name = status.status_name
         db.commit()
-        db.refresh(db_status)
-        return db_status
+        db.refresh(db_calibration)
+        return db_calibration
     return None
 
-def delete_status(db: Session, status_id: int):
-    db_status = db.query(models.Status).filter(models.Status.id == status_id).first()
-    if db_status:
-        db.delete(db_status)
+def delete_calibration(db: Session, instrument_no: str):
+    db_calibration = db.query(models.Calibration).filter(models.Calibration.instrument_no == instrument_no).first()
+    if db_calibration:
+        db.delete(db_calibration)
         db.commit()
-        return db_status
+        return db_calibration
     return None
 
-######  alarm  ########
-def create_alarm(db: Session, alarm: schemas.AlarmCreate):
-    db_alarm = models.Alarm(**alarm.dict())
-    db.add(db_alarm)
-    db.commit()
-    db.refresh(db_alarm)
-    return db_alarm
-
-def get_alarm(db: Session, alarm_id: int):
-    return db.query(models.Alarm).filter(models.Alarm.id == alarm_id).first()
-
-def get_alarms_by_project(db: Session, project_id: int):
-    return db.query(models.Alarm).filter(models.Alarm.project_id == project_id).all()
-
-def get_all_alarm(db: Session, skip: int = 0, limit: int = 10):
-    return db.query(models.Alarm).offset(skip).limit(limit).all()
-
-def update_alarm(db: Session, alarm_id: int, alarm: schemas.AlarmCreate):
-    db_alarm = db.query(models.Alarm).filter(models.Alarm.id == alarm_id).first()
-    if db_alarm:
-        db_alarm.alarm_name = alarm.alarm_name
-        db.commit()
-        db.refresh(db_alarm)
-        return db_alarm
-    return None
-
-def delete_alarm(db: Session, alarm_id: int):
-    db_alarm = db.query(models.Alarm).filter(models.Alarm.id == alarm_id).first()
-    if db_alarm:
-        db.delete(db_alarm)
-        db.commit()
-        return db_alarm
-    return None
-
-######  machine  ########
-def create_machine(db: Session, machine: schemas.MachineCreate):
-    db_machine = models.Machine(**machine.dict())
-    db.add(db_machine)
-    db.commit()
-    db.refresh(db_machine)
-    return db_machine
-
-def get_machine(db: Session, machine_id: int):
-    return db.query(models.Machine).filter(models.Machine.id == machine_id).first()
-
-def get_machines_by_project(db: Session, project_id: int):
-    return db.query(models.Machine).filter(models.Machine.project_id == project_id).all()
-
-def get_all_machine(db: Session, skip: int = 0, limit: int = 10):
-    return db.query(models.Machine).offset(skip).limit(limit).all()
-
-def update_machine(db: Session, machine_id: int, machine: schemas.MachineCreate):
-    db_machine = db.query(models.Machine).filter(models.Machine.id == machine_id).first()
-    if db_machine:
-        db_machine.machine_name = machine.machine_name
-        db.commit()
-        db.refresh(db_machine)
-        return db_machine
-    return None
-
-def delete_machine(db: Session, machine_id: int):
-    db_machine = db.query(models.Machine).filter(models.Machine.id == machine_id).first()
-    if db_machine:
-        db.delete(db_machine)
-        db.commit()
-        return db_machine
-    return None
